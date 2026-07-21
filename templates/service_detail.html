@@ -21,7 +21,7 @@
                 </div>
                 <p style="font-size: 1.05rem; line-height: 1.8; color: var(--color-text-light);">{{ service.description }}</p>
                 <div style="margin-top: var(--spacing-lg);">
-                    <a href="{{ url_for('plan_event') }}" class="btn btn-gold btn-lg">Plan This Service</a>
+                    <a href="{{ url_for('plan_event', service_id=service.id) }}" class="btn btn-gold btn-lg">Plan This Service</a>
                     <a href="{{ url_for('services') }}" class="btn btn-outline-gold btn-lg">All Services</a>
                 </div>
             </div>
