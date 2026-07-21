@@ -12,6 +12,9 @@
             <thead>
                 <tr>
                     <th>Reference</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                     <th>Service</th>
                     <th>Package</th>
                     <th>Event Date</th>
@@ -25,6 +28,9 @@
                 {% for inquiry in inquiries %}
                 <tr>
                     <td><strong>{{ inquiry.reference }}</strong></td>
+                    <td>{{ inquiry.full_name or '-' }}</td>
+                    <td>{{ inquiry.email or '-' }}</td>
+                    <td>{{ inquiry.phone or '-' }}</td>
                     <td>{{ inquiry.service_name or '-' }}</td>
                     <td>{{ inquiry.package_name or '-' }}</td>
                     <td>{{ inquiry.event_date or '-' }}</td>
@@ -47,7 +53,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="8" class="text-center text-muted">No inquiries found.</td>
+                    <td colspan="11" class="text-center text-muted">No inquiries found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
