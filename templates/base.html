@@ -16,7 +16,7 @@
     <meta name="description" content="{% block description %}Elegant Events - Create unforgettable moments with our premium event planning, styling, and coordination services. Luxury weddings, corporate events, birthdays, and more.{% endblock %}">
 
     <!-- ===== CANONICAL URL ===== -->
-    <link rel="canonical" href="{{ url_for(request.endpoint or 'index', **request.view_args or {}, _external=True) }}">
+    <link rel="canonical" href="{{ url_for(request.endpoint or 'index', _external=True) }}">
 
     <!-- ===== OPEN GRAPH TAGS ===== -->
     <meta property="og:title" content="{% block og_title %}Elegant Events - Luxury Event Planning{% endblock %}">
