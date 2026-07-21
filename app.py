@@ -310,7 +310,6 @@ def contact():
 
 @app.route('/plan-event', methods=['GET', 'POST'])
 def plan_event():
-    """Plan your event page."""
     conn = get_db()
     if not conn:
         return render_template('plan_event.html', services=[], packages=[])
@@ -324,29 +323,52 @@ def plan_event():
         close_db(conn, cursor)
         
         if request.method == 'POST':
-            # Process inquiry form
+            # Get contact info
+            full_name = request.form.get('full_name', '').strip()
+            email = request.form.get('email', '').strip()
+            phone = request.form.get('phone', '').strip()
+            
+            # Get event info
             service_id = request.form.get('service_id')
             package_id = request.form.get('package_id')
             event_date = request.form.get('event_date')
             guest_count = request.form.get('guest_count')
             budget = request.form.get('budget')
-            details = request.form.get('details')
+            details = request.form.get('details', '').strip()
+            
+            # Validate required fields
+            if not full_name or not email or not phone or not event_date or not guest_count or not details:
+                flash('Please fill in all required fields.', 'danger')
+                return render_template('plan_event.html', services=services, packages=packages)
             
             # Generate reference
             reference = "EE" + datetime.now().strftime("%Y%m%d%H%M%S")
             
             conn2 = get_db()
-            if conn2:
+            if not conn2:
+                flash('Database error. Please try again.', 'danger')
+                return render_template('plan_event.html', services=services, packages=packages)
+            
+            try:
                 cursor2 = conn2.cursor()
                 cursor2.execute("""
-                    INSERT INTO inquiries (service_id, package_id, event_date, guest_count, budget, details, status, reference)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO inquiries (
+                        full_name, email, phone, service_id, package_id, 
+                        event_date, guest_count, budget, details, status, reference
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     RETURNING id
-                """, (service_id, package_id, event_date, guest_count, budget, details, 'pending', reference))
+                """, (full_name, email, phone, service_id, package_id, event_date, 
+                      guest_count, budget, details, 'pending', reference))
                 inquiry_id = cursor2.fetchone()['id']
                 conn2.commit()
                 close_db(conn2, cursor2)
+                flash('Inquiry submitted successfully!', 'success')
                 return redirect(url_for('quote_summary', reference=reference))
+            except Exception as e:
+                print(f"Plan event error: {e}")
+                close_db(conn2)
+                flash('Error submitting inquiry. Please try again.', 'danger')
+                return render_template('plan_event.html', services=services, packages=packages)
         
         return render_template('plan_event.html', services=services, packages=packages)
     except Exception as e:
@@ -356,10 +378,10 @@ def plan_event():
 
 @app.route('/quote-summary/<reference>')
 def quote_summary(reference):
-    """Quote summary page."""
     conn = get_db()
     if not conn:
-        return render_template('quote_summary.html', inquiry=None, services=[], packages=[])
+        flash('Database error.', 'danger')
+        return render_template('quote_summary.html', inquiry=None)
     
     try:
         cursor = conn.cursor()
@@ -372,10 +394,16 @@ def quote_summary(reference):
         """, (reference,))
         inquiry = cursor.fetchone()
         close_db(conn, cursor)
+        
+        if not inquiry:
+            flash('Inquiry not found.', 'warning')
+            return render_template('quote_summary.html', inquiry=None)
+        
         return render_template('quote_summary.html', inquiry=inquiry)
     except Exception as e:
         print(f"Quote summary error: {e}")
         close_db(conn)
+        flash('Error loading inquiry.', 'danger')
         return render_template('quote_summary.html', inquiry=None)
 
 @app.route('/inquiry-submitted')
@@ -383,10 +411,40 @@ def inquiry_submitted():
     """Inquiry submitted page."""
     return render_template('inquiry_submitted.html')
 
-@app.route('/track-inquiry')
+@app.route('/track-inquiry', methods=['GET'])
 def track_inquiry():
-    """Track inquiry page."""
-    return render_template('track_inquiry.html')
+    reference = request.args.get('reference', '').strip()
+    
+    if not reference:
+        return render_template('track_inquiry.html', inquiry=None)
+    
+    conn = get_db()
+    if not conn:
+        flash('Database error.', 'danger')
+        return render_template('track_inquiry.html', inquiry=None)
+    
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT i.*, s.name as service_name, p.name as package_name
+            FROM inquiries i
+            LEFT JOIN services s ON s.id = i.service_id
+            LEFT JOIN packages p ON p.id = i.package_id
+            WHERE i.reference = %s
+        """, (reference,))
+        inquiry = cursor.fetchone()
+        close_db(conn, cursor)
+        
+        if not inquiry:
+            flash('No inquiry found with that reference number.', 'warning')
+            return render_template('track_inquiry.html', inquiry=None)
+        
+        return render_template('track_inquiry.html', inquiry=inquiry)
+    except Exception as e:
+        print(f"Track inquiry error: {e}")
+        close_db(conn)
+        flash('Error tracking inquiry.', 'danger')
+        return render_template('track_inquiry.html', inquiry=None)
 
 @app.route('/faq')
 def faq():
