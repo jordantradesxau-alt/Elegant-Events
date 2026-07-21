@@ -595,10 +595,14 @@ def admin_service_add():
     if request.method == 'POST':
         name = request.form.get('name')
         
-        # AUTO-GENERATE SLUG FROM NAME
+        if not name:
+            flash('Name is required.', 'danger')
+            return render_template('admin/service_form.html')
+        
+        # AUTO-GENERATE SLUG
         slug = name.lower()
         slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
-        slug = re.sub(r'[^a-z0-9-]', '', slug)  # Remove any other special chars
+        slug = re.sub(r'[^a-z0-9-]', '', slug)
         
         description = request.form.get('description')
         price = request.form.get('price')
@@ -606,10 +610,6 @@ def admin_service_add():
         category = request.form.get('category')
         featured = request.form.get('featured') == 'on'
         status = request.form.get('status', 'active')
-        
-        if not name or not slug:
-            flash('Name and slug are required.', 'danger')
-            return render_template('admin/service_form.html')
         
         image_url = None
         if 'image' in request.files:
@@ -750,14 +750,21 @@ def admin_package_add():
     if request.method == 'POST':
         name = request.form.get('name')
         
+        if not name:
+            flash('Name is required.', 'danger')
+            return render_template('admin/package_form.html')
+        
         # AUTO-GENERATE SLUG FROM NAME
         slug = name.lower()
         slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
         slug = re.sub(r'[^a-z0-9-]', '', slug)
         
-        if not name or not slug:
-            flash('Name and slug are required.', 'danger')
-            return render_template('admin/package_form.html')
+        # ✅ REMOVED the slug check since we auto-generate it
+        description = request.form.get('description')
+        price = request.form.get('price')
+        duration = request.form.get('duration')
+        featured = request.form.get('featured') == 'on'
+        status = request.form.get('status', 'active')
         
         image_url = None
         if 'image' in request.files:
