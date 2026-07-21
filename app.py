@@ -313,6 +313,11 @@ def plan_event():
     
     try:
         cursor = conn.cursor()
+        
+        # Get query parameters for pre-selection
+        selected_service = request.args.get('service_id', type=int)
+        selected_package = request.args.get('package_id', type=int)
+        
         cursor.execute("SELECT id, name, price FROM services WHERE status = 'active' ORDER BY name")
         services = cursor.fetchall()
         cursor.execute("SELECT id, name, price FROM packages WHERE status = 'active' ORDER BY name")
@@ -332,14 +337,16 @@ def plan_event():
             
             if not full_name or not email or not phone or not event_date or not guest_count or not details:
                 flash('Please fill in all required fields.', 'danger')
-                return render_template('plan_event.html', services=services, packages=packages)
+                return render_template('plan_event.html', services=services, packages=packages,
+                                     selected_service=selected_service, selected_package=selected_package)
             
             reference = "EE" + datetime.now().strftime("%Y%m%d%H%M%S")
             
             conn2 = get_db()
             if not conn2:
                 flash('Database error. Please try again.', 'danger')
-                return render_template('plan_event.html', services=services, packages=packages)
+                return render_template('plan_event.html', services=services, packages=packages,
+                                     selected_service=selected_service, selected_package=selected_package)
             
             try:
                 cursor2 = conn2.cursor()
@@ -360,9 +367,11 @@ def plan_event():
                 print(f"Plan event error: {e}")
                 close_db(conn2)
                 flash('Error submitting inquiry. Please try again.', 'danger')
-                return render_template('plan_event.html', services=services, packages=packages)
+                return render_template('plan_event.html', services=services, packages=packages,
+                                     selected_service=selected_service, selected_package=selected_package)
         
-        return render_template('plan_event.html', services=services, packages=packages)
+        return render_template('plan_event.html', services=services, packages=packages,
+                             selected_service=selected_service, selected_package=selected_package)
     except Exception as e:
         print(f"Plan event error: {e}")
         close_db(conn)
@@ -509,7 +518,9 @@ def admin_dashboard():
         return render_template('admin/dashboard.html', 
                              total_services=0, total_packages=0, 
                              total_inquiries=0, total_events=0,
-                             recent_inquiries=[])
+                             recent_inquiries=[],
+                             recent_services=[],
+                             recent_packages=[])
 
     try:
         cursor = conn.cursor()
@@ -528,20 +539,42 @@ def admin_dashboard():
         cursor.execute("SELECT * FROM inquiries ORDER BY created_at DESC LIMIT 5")
         recent_inquiries = cursor.fetchall()
         
+        # Recent services
+        cursor.execute("""
+            SELECT id, name, category, status, created_at 
+            FROM services 
+            ORDER BY created_at DESC 
+            LIMIT 5
+        """)
+        recent_services = cursor.fetchall()
+        
+        # Recent packages
+        cursor.execute("""
+            SELECT id, name, price, status, created_at 
+            FROM packages 
+            ORDER BY created_at DESC 
+            LIMIT 5
+        """)
+        recent_packages = cursor.fetchall()
+        
         close_db(conn, cursor)
         return render_template('admin/dashboard.html',
                              total_services=total_services,
                              total_packages=total_packages,
                              total_inquiries=total_inquiries,
                              total_events=total_events,
-                             recent_inquiries=recent_inquiries)
+                             recent_inquiries=recent_inquiries,
+                             recent_services=recent_services,
+                             recent_packages=recent_packages)
     except Exception as e:
         print(f"Dashboard error: {e}")
         close_db(conn)
         return render_template('admin/dashboard.html', 
                              total_services=0, total_packages=0, 
                              total_inquiries=0, total_events=0,
-                             recent_inquiries=[])
+                             recent_inquiries=[],
+                             recent_services=[],
+                             recent_packages=[])
 
 # ============================================================
 # ADMIN SERVICES
@@ -964,6 +997,108 @@ def admin_testimonials():
         print(f"Admin testimonials error: {e}")
         close_db(conn)
         return render_template('admin/testimonials.html', testimonials=[])
+
+@app.route('/admin/testimonials/add', methods=['GET', 'POST'])
+@admin_login_required
+def admin_testimonial_add():
+    if request.method == 'POST':
+        client_name = request.form.get('client_name', '').strip()
+        rating = request.form.get('rating', 5)
+        review = request.form.get('review', '').strip()
+        service_id = request.form.get('service_id')
+        is_featured = request.form.get('is_featured') == 'on'
+        
+        if not client_name or not review:
+            flash('Client name and review are required.', 'danger')
+            return render_template('admin/testimonial_form.html', services=[])
+        
+        conn = get_db()
+        if not conn:
+            flash('Database error.', 'danger')
+            return render_template('admin/testimonial_form.html', services=[])
+        
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO testimonials (client_name, rating, review, service_id, is_featured, status)
+                VALUES (%s, %s, %s, %s, %s, 'approved')
+            """, (client_name, int(rating), review, service_id, is_featured))
+            conn.commit()
+            close_db(conn, cursor)
+            flash('Testimonial added successfully!', 'success')
+            return redirect('/admin/testimonials')
+        except Exception as e:
+            print(f"Add testimonial error: {e}")
+            close_db(conn)
+            flash('Error adding testimonial.', 'danger')
+    
+    # Get services for dropdown
+    conn = get_db()
+    services = []
+    if conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, name FROM services WHERE status = 'active' ORDER BY name")
+        services = cursor.fetchall()
+        close_db(conn, cursor)
+    
+    return render_template('admin/testimonial_form.html', services=services, testimonial=None)
+
+@app.route('/admin/testimonials/edit/<int:testimonial_id>', methods=['GET', 'POST'])
+@admin_login_required
+def admin_testimonial_edit(testimonial_id):
+    conn = get_db()
+    if not conn:
+        flash('Database error.', 'danger')
+        return redirect('/admin/testimonials')
+    
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM testimonials WHERE id = %s", (testimonial_id,))
+        testimonial = cursor.fetchone()
+        
+        if not testimonial:
+            flash('Testimonial not found.', 'danger')
+            close_db(conn, cursor)
+            return redirect('/admin/testimonials')
+        
+        if request.method == 'POST':
+            client_name = request.form.get('client_name', '').strip()
+            rating = request.form.get('rating', 5)
+            review = request.form.get('review', '').strip()
+            service_id = request.form.get('service_id')
+            is_featured = request.form.get('is_featured') == 'on'
+            status = request.form.get('status', 'approved')
+            
+            if not client_name or not review:
+                flash('Client name and review are required.', 'danger')
+                close_db(conn, cursor)
+                return render_template('admin/testimonial_form.html', testimonial=testimonial, services=[])
+            
+            cursor.execute("""
+                UPDATE testimonials SET
+                    client_name = %s,
+                    rating = %s,
+                    review = %s,
+                    service_id = %s,
+                    is_featured = %s,
+                    status = %s
+                WHERE id = %s
+            """, (client_name, int(rating), review, service_id, is_featured, status, testimonial_id))
+            conn.commit()
+            close_db(conn, cursor)
+            flash('Testimonial updated!', 'success')
+            return redirect('/admin/testimonials')
+        
+        # Get services for dropdown
+        cursor.execute("SELECT id, name FROM services WHERE status = 'active' ORDER BY name")
+        services = cursor.fetchall()
+        close_db(conn, cursor)
+        return render_template('admin/testimonial_form.html', testimonial=testimonial, services=services)
+    except Exception as e:
+        print(f"Edit testimonial error: {e}")
+        close_db(conn)
+        flash('Error loading testimonial.', 'danger')
+        return redirect('/admin/testimonials')
 
 @app.route('/admin/testimonials/<int:testimonial_id>/approve')
 @admin_login_required
