@@ -2,14 +2,14 @@
 
 {% block title %}Track Your Inquiry - Elegant Events{% endblock %}
 
-{% block description %}Track your Elegant Events inquiry status by entering your reference number.{% endblock %}
-
 {% block content %}
 
 <section class="section" id="track-inquiry">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6 reveal">
+
+                <!-- Search Form -->
                 <div style="background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--radius-md); box-shadow: var(--shadow-md); text-align: center;">
                     <div style="font-size: 3rem; color: var(--color-gold); margin-bottom: var(--spacing-md);">
                         <i class="fas fa-search"></i>
@@ -17,7 +17,7 @@
                     <h2 style="font-weight: 700;">Track Your Inquiry</h2>
                     <p style="color: var(--color-text-light); margin-bottom: var(--spacing-lg);">Enter your reference number to check the status of your inquiry.</p>
 
-                    <form action="{{ url_for('track_inquiry') }}" method="GET" class="needs-validation" novalidate>
+                    <form method="GET" class="needs-validation" novalidate>
                         <div class="form-group">
                             <label for="reference" style="font-weight: 500;">Reference Number</label>
                             <input type="text" id="reference" name="reference" class="form-control" placeholder="e.g., EE20250101000001" style="text-align: center; font-family: monospace; font-size: 1.2rem; letter-spacing: 1px;" required>
@@ -25,11 +25,98 @@
                         </div>
                         <button type="submit" class="btn btn-gold btn-lg w-100 mt-3">Track Inquiry</button>
                     </form>
-
-                    <p style="margin-top: var(--spacing-md); color: var(--color-text-light); font-size: 0.9rem;">
-                        Don't have a reference number? <a href="{{ url_for('plan_event') }}" style="color: var(--color-gold);">Plan your event</a> to get one.
-                    </p>
                 </div>
+
+                <!-- Inquiry Results -->
+                {% if inquiry %}
+
+                <div style="background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--radius-md); box-shadow: var(--shadow-md); margin-top: var(--spacing-lg);">
+
+                    <h3 style="font-weight: 700; text-align: center; margin-bottom: var(--spacing-md);">Inquiry Status</h3>
+
+                    <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+                        <div style="background: var(--color-light-gray); padding: var(--spacing-md); border-radius: var(--radius-sm); display: inline-block;">
+                            <span style="font-weight: 600; color: var(--color-text);">Reference:</span>
+                            <span style="font-family: monospace; font-size: 1.1rem; color: var(--color-gold);">{{ inquiry.reference }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge -->
+                    <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+                        {% if inquiry.status == 'pending' %}
+                            <span style="display: inline-block; background: #f59e0b; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">⏳ Pending Review</span>
+                        {% elif inquiry.status == 'contacted' %}
+                            <span style="display: inline-block; background: #3b82f6; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">📞 Contacted</span>
+                        {% elif inquiry.status == 'in_progress' %}
+                            <span style="display: inline-block; background: #8b5cf6; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">🔄 In Progress</span>
+                        {% elif inquiry.status == 'booked' %}
+                            <span style="display: inline-block; background: #10b981; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">✅ Booked</span>
+                        {% elif inquiry.status == 'completed' %}
+                            <span style="display: inline-block; background: #059669; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">🎉 Completed</span>
+                        {% elif inquiry.status == 'cancelled' %}
+                            <span style="display: inline-block; background: #ef4444; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">❌ Cancelled</span>
+                        {% else %}
+                            <span style="display: inline-block; background: #6b7280; color: #fff; padding: 8px 24px; border-radius: 50px; font-weight: 600;">{{ inquiry.status|title }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Inquiry Details -->
+                    <div style="text-align: left; border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);">
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Name</span>
+                                <span style="font-weight: 500;">{{ inquiry.full_name }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Email</span>
+                                <span style="font-weight: 500;">{{ inquiry.email }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Phone</span>
+                                <span style="font-weight: 500;">{{ inquiry.phone }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Event Date</span>
+                                <span style="font-weight: 500;">{{ inquiry.event_date }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Guest Count</span>
+                                <span style="font-weight: 500;">{{ inquiry.guest_count }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Budget</span>
+                                <span style="font-weight: 500;">KES {{ inquiry.budget }}</span>
+                            </li>
+                            <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                                <span style="color: var(--color-text-light);">Event Details</span>
+                                <span style="font-weight: 500;">{{ inquiry.details|truncate(60) }}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="text-align: center; margin-top: var(--spacing-lg);">
+                        <p style="color: var(--color-text-light); font-size: 0.9rem;">
+                            <i class="fas fa-info-circle" style="color: var(--color-gold);"></i>
+                            Our team will reach out to you soon. If you have any questions, contact us at <a href="mailto:info@elegantevents.com" style="color: var(--color-gold);">info@elegantevents.com</a>
+                        </p>
+                        <a href="{{ url_for('index') }}" class="btn btn-gold">Return Home</a>
+                    </div>
+                </div>
+
+                {% elif request.args.get('reference') %}
+
+                <!-- Not Found -->
+                <div style="background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--radius-md); box-shadow: var(--shadow-md); margin-top: var(--spacing-lg); text-align: center;">
+                    <div style="font-size: 3rem; color: #ef4444; margin-bottom: var(--spacing-md);">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3 style="font-weight: 700;">Inquiry Not Found</h3>
+                    <p style="color: var(--color-text-light);">We couldn't find an inquiry with that reference number. Please check and try again.</p>
+                    <a href="{{ url_for('track_inquiry') }}" class="btn btn-outline-gold mt-3">Try Again</a>
+                </div>
+
+                {% endif %}
+
             </div>
         </div>
     </div>
