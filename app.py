@@ -346,7 +346,7 @@ def plan_event():
                 inquiry_id = cursor2.fetchone()['id']
                 conn2.commit()
                 close_db(conn2, cursor2)
-                return redirect(f'/quote-summary/{reference}')
+                return redirect(url_for('quote_summary', reference=reference))
         
         return render_template('plan_event.html', services=services, packages=packages)
     except Exception as e:
