@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Elegant Events{% endblock %}
+
+{% block description %}Learn about Elegant Events, our mission, and our team of expert event planners dedicated to creating unforgettable luxury experiences.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 reveal">
+                <span class="section-subtitle">About Us</span>
+                <h1>Creating Unforgettable <span style="color: var(--color-gold);">Moments</span></h1>
+                <div class="section-divider" style="margin-left: 0;"></div>
+                <p style="font-size: 1.1rem; line-height: 1.8;">Elegant Events is a premier luxury event planning and management company based in Nairobi, Kenya. We specialize in crafting bespoke experiences that leave lasting impressions.</p>
+                <p style="color: var(--color-text-light);">From intimate gatherings to grand celebrations, our team brings creativity, precision, and passion to every event we plan.</p>
+                <a href="{{ url_for('plan_event') }}" class="btn btn-gold mt-3">Plan Your Event</a>
+            </div>
+            <div class="col-lg-6 reveal" data-aos-delay="200">
+                <img src="{{ url_for('static', filename='images/placeholder-about.jpg') }}" alt="About Elegant Events" class="img-fluid rounded shadow" loading="lazy">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: var(--color-light-gray);" id="our-mission">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 reveal" data-aos-delay="100">
+                <div style="padding: var(--spacing-lg);">
+                    <div style="font-size: 3rem; color: var(--color-gold); margin-bottom: var(--spacing-md);">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h4>Our Mission</h4>
+                    <p style="color: var(--color-text-light);">To deliver exceptional event experiences that exceed our clients' expectations and create unforgettable memories.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal" data-aos-delay="200">
+                <div style="padding: var(--spacing-lg);">
+                    <div style="font-size: 3rem; color: var(--color-gold); margin-bottom: var(--spacing-md);">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h4>Our Vision</h4>
+                    <p style="color: var(--color-text-light);">To be the most sought-after luxury event planning brand in Africa, known for excellence, creativity, and flawless execution.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal" data-aos-delay="300">
+                <div style="padding: var(--spacing-lg);">
+                    <div style="font-size: 3rem; color: var(--color-gold); margin-bottom: var(--spacing-md);">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h4>Our Values</h4>
+                    <p style="color: var(--color-text-light);">Integrity, creativity, attention to detail, and a relentless commitment to delivering excellence in everything we do.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+</style>
+{% endblock %}

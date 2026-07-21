@@ -1,0 +1,72 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Manage Packages{% endblock %}
+{% block page_title %}Packages{% endblock %}
+{% block page_subtitle %}Manage your package offerings{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">Total: {{ packages|length }} packages</span>
+    <a href="{{ url_for('admin_package_add') }}" class="btn btn-gold btn-sm-custom">
+        <i class="fas fa-plus"></i> Add Package
+    </a>
+</div>
+
+<div class="admin-card">
+    <div class="table-responsive">
+        <table class="table table-admin">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for package in packages %}
+                <tr>
+                    <td>
+                        {% if package.image %}
+                            <img src="{{ package.image }}" alt="{{ package.name }}" style="width:50px;height:50px;object-fit:cover;border-radius:8px;">
+                        {% else %}
+                            <div style="width:50px;height:50px;background:#222;border-radius:8px;"></div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ package.name }}</strong></td>
+                    <td>KES {{ package.price }}</td>
+                    <td>{{ package.duration }}</td>
+                    <td><span class="badge badge-status {{ package.status }}">{{ package.status }}</span></td>
+                    <td>
+                        {% if package.featured %}
+                            <span class="badge badge-status featured"><i class="fas fa-star"></i></span>
+                        {% else %}
+                            <span class="badge badge-status inactive">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url_for('admin_package_edit', package_id=package.id) }}" class="btn btn-outline-gold btn-sm-custom">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('admin_package_delete', package_id=package.id) }}" class="btn btn-danger-custom btn-sm-custom" onclick="return confirm('Delete this package?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">No packages found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

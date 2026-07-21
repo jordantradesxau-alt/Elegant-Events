@@ -1,0 +1,90 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}{{ 'Edit' if service else 'Add' }} Service{% endblock %}
+{% block page_title %}{{ 'Edit' if service else 'Add' }} Service{% endblock %}
+{% block page_subtitle %}{{ 'Update' if service else 'Create' }} a service offering{% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Service Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control-admin" value="{{ service.name if service else '' }}" placeholder="e.g., Luxury Wedding Planning" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Slug <span class="text-danger">*</span></label>
+                    <input type="text" name="slug" class="form-control-admin" value="{{ service.slug if service else '' }}" placeholder="e.g., luxury-wedding-planning" required>
+                    <small class="text-muted">URL-friendly version of the name (lowercase, hyphens instead of spaces)</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Description</label>
+                    <textarea name="description" class="form-control-admin" rows="4" placeholder="Full service description...">{{ service.description if service else '' }}</textarea>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Category <span class="text-danger">*</span></label>
+                    <select name="category" class="form-control-admin" required>
+                        <option value="">Select Category</option>
+                        <option value="wedding" {% if service and service.category == 'wedding' %}selected{% endif %}>Wedding</option>
+                        <option value="corporate" {% if service and service.category == 'corporate' %}selected{% endif %}>Corporate</option>
+                        <option value="birthday" {% if service and service.category == 'birthday' %}selected{% endif %}>Birthday</option>
+                        <option value="private" {% if service and service.category == 'private' %}selected{% endif %}>Private</option>
+                        <option value="destination" {% if service and service.category == 'destination' %}selected{% endif %}>Destination</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Price (KES) <span class="text-danger">*</span></label>
+                    <input type="number" name="price" class="form-control-admin" value="{{ service.price if service else '' }}" step="0.01" min="0" placeholder="e.g., 150000" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Duration</label>
+                    <input type="text" name="duration" class="form-control-admin" value="{{ service.duration if service else '' }}" placeholder="e.g., 6-12 months">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Image</label>
+                    <input type="file" name="image" class="form-control-admin" accept="image/*">
+                    {% if service and service.image %}
+                        <div class="mt-2">
+                            <img src="{{ service.image }}" alt="Current image" style="max-width:100%;max-height:100px;border-radius:8px;object-fit:cover;">
+                            <small class="text-muted d-block">Current image</small>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="featured" class="form-check-input" {% if service and service.featured %}checked{% endif %}>
+                        <label class="form-check-label">Featured Service</label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Status</label>
+                    <select name="status" class="form-control-admin">
+                        <option value="active" {% if not service or service.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if service and service.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-gold btn-sm-custom">
+                <i class="fas fa-save"></i> {{ 'Update' if service else 'Add' }} Service
+            </button>
+            <a href="{{ url_for('admin_services') }}" class="btn btn-outline-gold btn-sm-custom">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

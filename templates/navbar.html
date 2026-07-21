@@ -1,0 +1,83 @@
+<!-- ============================================================
+    ELEGANT EVENTS - NAVBAR
+    ============================================================ -->
+
+<header class="navbar-header" id="navbar-header">
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <span class="brand-icon">✦</span>
+                <span class="brand-text">Elegant</span>
+                <span class="brand-text-light">Events</span>
+            </a>
+
+            <!-- Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Nav Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.endpoint in ['services', 'service_detail'] %}active{% endif %}" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Services
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('services') }}">All Services</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('services') }}#wedding">Wedding Planning</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('services') }}#corporate">Corporate Events</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('services') }}#birthday">Birthday Celebrations</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('services') }}#private">Private Events</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.endpoint in ['packages', 'package_detail'] %}active{% endif %}" href="#" id="packagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Packages
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="packagesDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('packages') }}">All Packages</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('packages') }}#elegance">The Elegance Collection</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('packages') }}#executive">The Executive Package</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('packages') }}#celebration">The Celebration Package</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'gallery' %}active{% endif %}" href="{{ url_for('gallery') }}">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'testimonials' %}active{% endif %}" href="{{ url_for('testimonials') }}">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a>
+                    </li>
+                </ul>
+
+                <!-- CTA Button -->
+                <div class="navbar-cta">
+                    <a href="{{ url_for('plan_event') }}" class="btn btn-gold">
+                        <i class="fas fa-calendar-plus"></i> Plan Your Event
+                    </a>
+                </div>
+
+                <!-- Admin Link (visible to admins only) -->
+                {% if session.get('admin_id') %}
+                <div class="navbar-admin">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-gold btn-sm">
+                        <i class="fas fa-crown"></i> Admin
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>

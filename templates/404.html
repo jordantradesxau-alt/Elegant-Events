@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found - Elegant Events{% endblock %}
+
+{% block content %}
+
+<section class="section" style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-6 reveal">
+                <h1 style="font-size: 6rem; color: var(--color-gold); font-weight: 700; margin-bottom: 0;">404</h1>
+                <div style="font-size: 4rem; color: var(--color-gold); margin-bottom: var(--spacing-md);">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <h2 style="font-weight: 700;">Page Not Found</h2>
+                <p style="color: var(--color-text-light); font-size: 1.1rem;">The page you're looking for doesn't exist or has been moved.</p>
+                <div style="margin-top: var(--spacing-lg);">
+                    <a href="{{ url_for('index') }}" class="btn btn-gold btn-lg">Return Home</a>
+                    <a href="{{ url_for('plan_event') }}" class="btn btn-outline-gold btn-lg">Plan Your Event</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

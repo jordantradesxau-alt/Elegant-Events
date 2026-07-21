@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Elegant Events{% endblock %}
+
+{% block description %}Frequently asked questions about Elegant Events. Find answers about our services, packages, pricing, and planning process.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="faq">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Have Questions?</span>
+            <h1>Frequently Asked Questions</h1>
+            <div class="section-divider"></div>
+            <p>Find answers to the most common questions about our services and planning process.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="faq-item reveal" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">What services do you offer?</h4>
+                    <p style="color: var(--color-text-light);">We offer a comprehensive range of event planning services including luxury weddings, corporate events, birthday celebrations, private dinner parties, and destination events. Each service is tailored to your specific needs.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="100" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">How much does event planning cost?</h4>
+                    <p style="color: var(--color-text-light);">Our pricing varies depending on the scope of your event, number of guests, and specific requirements. We offer flexible packages starting from KES 65,000. Contact us for a personalized quote.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="200" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">How far in advance should I book?</h4>
+                    <p style="color: var(--color-text-light);">We recommend booking at least 3-6 months in advance for weddings and large events. For smaller gatherings, 1-2 months is usually sufficient. Contact us early to secure your preferred date.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="300" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">Do you offer destination event planning?</h4>
+                    <p style="color: var(--color-text-light);">Yes, we specialize in destination weddings and events. Our team handles all aspects including venue selection, travel coordination, and on-site management to ensure a seamless experience.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="400" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">Can I customize a package?</h4>
+                    <p style="color: var(--color-text-light);">Absolutely. All our packages are fully customizable. You can mix and match services, adjust the duration, and tailor the package to fit your specific vision and budget.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="500" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">What is your planning process?</h4>
+                    <p style="color: var(--color-text-light);">Our process begins with a consultation to understand your vision. We then develop a detailed proposal, handle all vendor coordination, manage the event design and styling, and provide day-of coordination to ensure everything runs flawlessly.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="600" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">Do you handle vendor management?</h4>
+                    <p style="color: var(--color-text-light);">Yes, we have a network of trusted vendors including caterers, florists, photographers, entertainers, and venue partners. We manage all vendor communications and coordination on your behalf.</p>
+                </div>
+
+                <div class="faq-item reveal" data-aos-delay="700" style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-md);">
+                    <h4 style="font-weight: 600; color: var(--color-gold);">Do you provide day-of coordination?</h4>
+                    <p style="color: var(--color-text-light);">Yes, day-of coordination is included in all our packages. Our team will be on-site to manage the event timeline, coordinate with vendors, and handle any issues that arise, so you can enjoy your special day stress-free.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+    .faq-item:hover {
+        box-shadow: var(--shadow-md);
+    }
+</style>
+{% endblock %}

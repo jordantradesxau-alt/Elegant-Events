@@ -1,0 +1,78 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Manage Gallery{% endblock %}
+{% block page_title %}Gallery{% endblock %}
+{% block page_subtitle %}Manage your portfolio images{% endblock %}
+
+{% block content %}
+
+<!-- Upload Form -->
+<div class="admin-card">
+    <h5><i class="fas fa-upload" style="color: #d4af37;"></i> Upload New Image</h5>
+    <form action="{{ url_for('admin_gallery_add') }}" method="POST" enctype="multipart/form-data" class="row g-3">
+        <div class="col-md-4">
+            <input type="text" name="title" class="form-control-admin" placeholder="Image Title" required>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="description" class="form-control-admin" placeholder="Description">
+        </div>
+        <div class="col-md-2">
+            <input type="text" name="album" class="form-control-admin" placeholder="Album Name" required>
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="display_order" class="form-control-admin" placeholder="Order" value="0">
+        </div>
+        <div class="col-md-1">
+            <input type="file" name="image" class="form-control-admin" accept="image/*" required>
+        </div>
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-gold btn-sm-custom">Upload Image</button>
+        </div>
+    </form>
+</div>
+
+<!-- Gallery List -->
+<div class="admin-card">
+    <div class="table-responsive">
+        <table class="table table-admin">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Album</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in gallery %}
+                <tr>
+                    <td>
+                        {% if image.image %}
+                            <img src="{{ image.image }}" alt="{{ image.title }}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+                        {% else %}
+                            <div style="width:60px;height:60px;background:#222;border-radius:8px;"></div>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ image.title }}</strong></td>
+                    <td><span class="badge badge-status active">{{ image.album }}</span></td>
+                    <td>{{ image.display_order }}</td>
+                    <td><span class="badge badge-status {{ image.status }}">{{ image.status }}</span></td>
+                    <td>
+                        <a href="{{ url_for('admin_gallery_delete', gallery_id=image.id) }}" class="btn btn-danger-custom btn-sm-custom" onclick="return confirm('Delete this image?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No gallery images found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

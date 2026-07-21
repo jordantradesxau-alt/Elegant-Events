@@ -1,0 +1,88 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}{{ 'Edit' if package else 'Add' }} Package{% endblock %}
+{% block page_title %}{{ 'Edit' if package else 'Add' }} Package{% endblock %}
+{% block page_subtitle %}{{ 'Update' if package else 'Create' }} a package offering{% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Package Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control-admin" value="{{ package.name if package else '' }}" placeholder="e.g., The Elegance Collection" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Slug <span class="text-danger">*</span></label>
+                    <input type="text" name="slug" class="form-control-admin" value="{{ package.slug if package else '' }}" placeholder="e.g., elegance-collection" required>
+                    <small class="text-muted">URL-friendly version of the name (lowercase, hyphens instead of spaces)</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Description</label>
+                    <textarea name="description" class="form-control-admin" rows="4" placeholder="Full package description...">{{ package.description if package else '' }}</textarea>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Services Included</label>
+                    <select name="services" class="form-control-admin" multiple style="height:120px;">
+                        {% for service in services %}
+                            <option value="{{ service.id }}" {% if service.id in selected_services %}selected{% endif %}>{{ service.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Hold Ctrl/Cmd to select multiple services</small>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Price (KES) <span class="text-danger">*</span></label>
+                    <input type="number" name="price" class="form-control-admin" value="{{ package.price if package else '' }}" step="0.01" min="0" placeholder="e.g., 350000" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Duration</label>
+                    <input type="text" name="duration" class="form-control-admin" value="{{ package.duration if package else '' }}" placeholder="e.g., 6 months">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Image</label>
+                    <input type="file" name="image" class="form-control-admin" accept="image/*">
+                    {% if package and package.image %}
+                        <div class="mt-2">
+                            <img src="{{ package.image }}" alt="Current image" style="max-width:100%;max-height:100px;border-radius:8px;object-fit:cover;">
+                            <small class="text-muted d-block">Current image</small>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="featured" class="form-check-input" {% if package and package.featured %}checked{% endif %}>
+                        <label class="form-check-label">Featured Package</label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Status</label>
+                    <select name="status" class="form-control-admin">
+                        <option value="active" {% if not package or package.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="inactive" {% if package and package.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-gold btn-sm-custom">
+                <i class="fas fa-save"></i> {{ 'Update' if package else 'Add' }} Package
+            </button>
+            <a href="{{ url_for('admin_packages') }}" class="btn btn-outline-gold btn-sm-custom">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Manage Testimonials{% endblock %}
+{% block page_title %}Testimonials{% endblock %}
+{% block page_subtitle %}Manage customer reviews{% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+    <div class="table-responsive">
+        <table class="table table-admin">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Review</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for testimonial in testimonials %}
+                <tr>
+                    <td><strong>{{ testimonial.client_name }}</strong></td>
+                    <td>{{ testimonial.review|truncate(60) }}</td>
+                    <td>
+                        {% for i in range(testimonial.rating) %}⭐{% endfor %}
+                    </td>
+                    <td><span class="badge badge-status {{ testimonial.status }}">{{ testimonial.status }}</span></td>
+                    <td>
+                        {% if testimonial.is_featured %}
+                            <span class="badge badge-status featured"><i class="fas fa-star"></i></span>
+                        {% else %}
+                            <span class="badge badge-status inactive">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            {% if testimonial.status == 'pending' %}
+                            <a href="{{ url_for('admin_testimonial_approve', testimonial_id=testimonial.id) }}" class="btn btn-gold btn-sm-custom">
+                                <i class="fas fa-check"></i>
+                            </a>
+                            {% endif %}
+                            <a href="{{ url_for('admin_testimonial_delete', testimonial_id=testimonial.id) }}" class="btn btn-danger-custom btn-sm-custom" onclick="return confirm('Delete this testimonial?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No testimonials found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Plan Your Event - Elegant Events{% endblock %}
+
+{% block description %}Start planning your dream event with Elegant Events. Fill out our form and let our expert team create an unforgettable experience for you.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="plan-event">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Start Planning</span>
+            <h1>Plan Your Event</h1>
+            <div class="section-divider"></div>
+            <p>Fill out the form below and our expert team will get back to you with a personalized quote.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8 reveal">
+                <div style="background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
+                    <form action="{{ url_for('plan_event') }}" method="POST" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="service_id">Select a Service</label>
+                                    <select id="service_id" name="service_id" class="form-control">
+                                        <option value="">Choose a service...</option>
+                                        {% for service in services %}
+                                        <option value="{{ service.id }}">{{ service.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="package_id">Select a Package</label>
+                                    <select id="package_id" name="package_id" class="form-control">
+                                        <option value="">Choose a package...</option>
+                                        {% for package in packages %}
+                                        <option value="{{ package.id }}">{{ package.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="event_date">Event Date <span style="color: red;">*</span></label>
+                                    <input type="date" id="event_date" name="event_date" class="form-control" required>
+                                    <div class="invalid-feedback">Please select an event date.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="guest_count">Guest Count <span style="color: red;">*</span></label>
+                                    <input type="number" id="guest_count" name="guest_count" class="form-control" placeholder="Number of guests" min="1" required>
+                                    <div class="invalid-feedback">Please enter the number of guests.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="budget">Budget (KES)</label>
+                                    <input type="number" id="budget" name="budget" class="form-control" placeholder="Estimated budget" min="0">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="details">Event Details <span style="color: red;">*</span></label>
+                                    <textarea id="details" name="details" class="form-control" rows="5" placeholder="Tell us about your event, your vision, and any special requirements..." required></textarea>
+                                    <div class="invalid-feedback">Please provide event details.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-gold btn-lg w-100">Submit Inquiry</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+</style>
+{% endblock %}

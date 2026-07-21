@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}Elegant Events - Luxury Event Planning & Management{% endblock %}
+
+{% block description %}Create unforgettable moments with Elegant Events. Premium event planning, styling, and coordination services for weddings, corporate events, birthdays, and private celebrations.{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section" id="hero">
+    <div class="hero-bg">
+        <img src="{{ url_for('static', filename='images/hero-placeholder.jpg') }}" alt="Luxury event setup" loading="lazy">
+    </div>
+    <div class="container">
+        <div class="hero-content">
+            <span class="section-subtitle">Welcome to Elegant Events</span>
+            <h1>Create <span class="highlight">Unforgettable</span> Moments</h1>
+            <p>Luxury event planning and management for discerning clients. From intimate gatherings to grand celebrations, we bring your vision to life with elegance and precision.</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('plan_event') }}" class="btn btn-gold btn-lg">
+                    <i class="fas fa-calendar-plus"></i> Plan Your Event
+                </a>
+                <a href="{{ url_for('services') }}" class="btn btn-outline-gold btn-lg">
+                    Explore Services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURED SERVICES ===== -->
+<section class="section" id="featured-services">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">What We Offer</span>
+            <h2>Our Featured Services</h2>
+            <div class="section-divider"></div>
+            <p>Discover our curated range of premium event planning services designed to exceed your expectations.</p>
+        </div>
+
+        <div class="row g-4">
+            {% if featured_services %}
+                {% for service in featured_services %}
+                <div class="col-md-6 col-lg-3 reveal" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="card-luxury">
+                        <div class="card-image">
+                            {% if service.image %}
+                                <img src="{{ service.image }}" alt="{{ service.name }}" loading="lazy">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/placeholder-' + service.slug + '.jpg') }}" alt="{{ service.name }}" loading="lazy">
+                            {% endif %}
+                            {% if service.featured %}
+                                <span class="card-badge">Featured</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h4>{{ service.name }}</h4>
+                            <p class="card-description">{{ service.description|truncate(80) }}</p>
+                            <div class="card-meta">
+                                <span><i class="fas fa-clock"></i> {{ service.duration }}</span>
+                                <span><i class="fas fa-tag"></i> From KES {{ service.price }}</span>
+                            </div>
+                            <a href="{{ url_for('service_detail', slug=service.slug) }}" class="btn btn-gold btn-sm">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No featured services available. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-5 reveal">
+            <a href="{{ url_for('services') }}" class="btn btn-outline-gold">View All Services <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FEATURED PACKAGES ===== -->
+<section class="section" id="featured-packages" style="background: var(--color-light-gray);">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Curated Experiences</span>
+            <h2>Featured Packages</h2>
+            <div class="section-divider"></div>
+            <p>Choose from our signature packages designed to deliver unforgettable experiences.</p>
+        </div>
+
+        <div class="row g-4">
+            {% if featured_packages %}
+                {% for package in featured_packages %}
+                <div class="col-md-6 col-lg-4 reveal" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="card-luxury">
+                        <div class="card-image">
+                            {% if package.image %}
+                                <img src="{{ package.image }}" alt="{{ package.name }}" loading="lazy">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/placeholder-' + package.slug + '.jpg') }}" alt="{{ package.name }}" loading="lazy">
+                            {% endif %}
+                            <span class="card-badge">Package</span>
+                        </div>
+                        <div class="card-body">
+                            <h4>{{ package.name }}</h4>
+                            <p class="card-description">{{ package.description|truncate(100) }}</p>
+                            <div class="card-meta">
+                                <span><i class="fas fa-clock"></i> {{ package.duration }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="card-price">KES {{ package.price }}</span>
+                                <a href="{{ url_for('package_detail', slug=package.slug) }}" class="btn btn-gold btn-sm">View Package</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">No packages available. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-5 reveal">
+            <a href="{{ url_for('packages') }}" class="btn btn-outline-gold">View All Packages <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section" id="testimonials">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Client Stories</span>
+            <h2>What Our Clients Say</h2>
+            <div class="section-divider"></div>
+            <p>Real experiences from clients who trusted us with their special moments.</p>
+        </div>
+
+        <div class="testimonial-slider-wrapper reveal">
+            {% if testimonials %}
+                <ul id="testimonial-slider" class="testimonial-slider">
+                    {% for testimonial in testimonials %}
+                    <li>
+                        <div class="testimonial-card">
+                            <div class="testimonial-rating">
+                                {% for i in range(testimonial.rating) %}
+                                    <i class="fas fa-star"></i>
+                                {% endfor %}
+                            </div>
+                            <p class="testimonial-text">"{{ testimonial.review }}"</p>
+                            <div class="testimonial-author">
+                                <strong>{{ testimonial.client_name }}</strong>
+                                <span>— Verified Client</span>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center">
+                    <p class="text-muted">No testimonials yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- ===== WHY CHOOSE US ===== -->
+<section class="section" id="why-choose" style="background: var(--color-dark); color: var(--color-white);">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Why Choose Us</span>
+            <h2 style="color: var(--color-white);">The Elegant Events Difference</h2>
+            <div class="section-divider"></div>
+            <p style="color: rgba(255,255,255,0.6);">What sets us apart and makes us the preferred choice for discerning clients.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 reveal" data-aos-delay="100">
+                <div class="why-card text-center">
+                    <div class="why-icon"><i class="fas fa-crown"></i></div>
+                    <h4>Premium Quality</h4>
+                    <p>Every detail is meticulously curated to the highest standards of excellence.</p>
+                </div>
+            </div>
+            <div class="col-md-3 reveal" data-aos-delay="200">
+                <div class="why-card text-center">
+                    <div class="why-icon"><i class="fas fa-heart"></i></div>
+                    <h4>Personalized Service</h4>
+                    <p>We tailor every experience to your unique vision and preferences.</p>
+                </div>
+            </div>
+            <div class="col-md-3 reveal" data-aos-delay="300">
+                <div class="why-card text-center">
+                    <div class="why-icon"><i class="fas fa-star"></i></div>
+                    <h4>Expert Team</h4>
+                    <p>Our experienced professionals bring years of expertise to every event.</p>
+                </div>
+            </div>
+            <div class="col-md-3 reveal" data-aos-delay="400">
+                <div class="why-card text-center">
+                    <div class="why-icon"><i class="fas fa-clock"></i></div>
+                    <h4>Stress-Free Planning</h4>
+                    <p>We handle everything so you can enjoy your special moment worry-free.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<section class="cta-banner" id="cta">
+    <div class="container">
+        <div class="cta-content reveal">
+            <h2>Ready to Create Your Dream Event?</h2>
+            <p>Let's start planning your unforgettable experience today.</p>
+            <a href="{{ url_for('plan_event') }}" class="btn btn-gold btn-lg">
+                <i class="fas fa-calendar-plus"></i> Start Planning Now
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: var(--spacing-xxxl) 0;
+        background: var(--color-dark);
+        color: var(--color-white);
+        overflow: hidden;
+    }
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    .hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.3;
+    }
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+    }
+    .hero-content .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-sm);
+    }
+    .hero-content h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: var(--spacing-md);
+    }
+    .hero-content h1 .highlight {
+        color: var(--color-gold);
+    }
+    .hero-content p {
+        font-size: 1.2rem;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: var(--spacing-lg);
+        max-width: 550px;
+    }
+    .hero-actions {
+        display: flex;
+        gap: var(--spacing-md);
+        flex-wrap: wrap;
+    }
+    .why-card {
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-md);
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: all var(--transition-smooth);
+        height: 100%;
+    }
+    .why-card:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateY(-6px);
+        border-color: rgba(212,175,55,0.2);
+    }
+    .why-icon {
+        font-size: 2.5rem;
+        color: var(--color-gold);
+        margin-bottom: var(--spacing-md);
+        display: inline-block;
+    }
+    .why-card h4 {
+        color: var(--color-white);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-sm);
+    }
+    .why-card p {
+        color: rgba(255,255,255,0.6);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    .testimonial-card {
+        padding: var(--spacing-lg);
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        text-align: center;
+        margin: var(--spacing-sm);
+        transition: all var(--transition-smooth);
+    }
+    .testimonial-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+    .testimonial-rating {
+        color: var(--color-gold);
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-sm);
+    }
+    .testimonial-text {
+        font-family: var(--font-accent);
+        font-size: 1.15rem;
+        font-style: italic;
+        color: var(--color-text);
+        margin-bottom: var(--spacing-md);
+        line-height: 1.6;
+    }
+    .testimonial-author {
+        display: flex;
+        flex-direction: column;
+    }
+    .testimonial-author strong {
+        color: var(--color-text);
+        font-weight: 600;
+    }
+    .testimonial-author span {
+        color: var(--color-text-light);
+        font-size: 0.85rem;
+    }
+    .cta-banner {
+        padding: var(--spacing-xxxl) 0;
+        background: linear-gradient(135deg, var(--color-dark), var(--color-dark-gray));
+        border-top: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--color-border);
+    }
+    .cta-content {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .cta-content h2 {
+        color: var(--color-white);
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+    }
+    .cta-content p {
+        color: rgba(255,255,255,0.6);
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-lg);
+    }
+    @media (max-width: 768px) {
+        .hero-content h1 { font-size: 2.4rem; }
+        .hero-content p { font-size: 1rem; }
+        .hero-actions { flex-direction: column; align-items: flex-start; }
+        .hero-actions .btn { width: 100%; text-align: center; }
+        .cta-content h2 { font-size: 1.8rem; }
+    }
+    @media (max-width: 480px) {
+        .hero-content h1 { font-size: 1.8rem; }
+    }
+</style>
+{% endblock %}

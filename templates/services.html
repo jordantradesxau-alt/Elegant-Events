@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Services - Elegant Events{% endblock %}
+
+{% block description %}Explore our premium event planning services including luxury weddings, corporate events, birthday celebrations, and private gatherings.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="services-hero">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">What We Do</span>
+            <h1>Our Services</h1>
+            <div class="section-divider"></div>
+            <p>Discover our comprehensive range of premium event planning and management services.</p>
+        </div>
+
+        {% if services_by_category %}
+            {% for category, services in services_by_category.items() %}
+            <div class="mt-5 reveal" id="{{ category|lower|replace(' ', '-') }}">
+                <h3 style="font-family: var(--font-heading); font-weight: 600; margin-bottom: var(--spacing-md);">
+                    <i class="fas fa-tag" style="color: var(--color-gold);"></i>
+                    {{ category|title }}
+                </h3>
+                <div class="row g-4">
+                    {% for service in services %}
+                    <div class="col-md-6 col-lg-4 reveal" data-aos-delay="{{ loop.index0 * 100 }}">
+                        <div class="card-luxury">
+                            <div class="card-image">
+                                {% if service.image %}
+                                    <img src="{{ service.image }}" alt="{{ service.name }}" loading="lazy">
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='images/placeholder-' + service.slug + '.jpg') }}" alt="{{ service.name }}" loading="lazy">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h4>{{ service.name }}</h4>
+                                <p class="card-description">{{ service.description|truncate(100) }}</p>
+                                <div class="card-meta">
+                                    <span><i class="fas fa-clock"></i> {{ service.duration }}</span>
+                                    <span><i class="fas fa-tag"></i> From KES {{ service.price }}</span>
+                                </div>
+                                <a href="{{ url_for('service_detail', slug=service.slug) }}" class="btn btn-gold btn-sm mt-2">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No services available. Check back soon!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section" style="background: var(--color-light-gray);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 reveal">
+                <span class="section-subtitle">Need Help?</span>
+                <h2>Let's Plan Your <span style="color: var(--color-gold);">Dream Event</span></h2>
+                <p style="color: var(--color-text-light);">Not sure which service is right for you? Our expert team is here to help you choose the perfect package for your special occasion.</p>
+                <a href="{{ url_for('plan_event') }}" class="btn btn-gold mt-3">Plan Your Event</a>
+            </div>
+            <div class="col-lg-6 reveal" data-aos-delay="200">
+                <div style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h4 style="font-weight: 600;">Why Choose Our Services?</h4>
+                    <ul style="list-style: none; padding: 0; margin-top: var(--spacing-md);">
+                        <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-check-circle" style="color: var(--color-gold);"></i>
+                            <span style="margin-left: var(--spacing-sm);">Bespoke event design tailored to your vision</span>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-check-circle" style="color: var(--color-gold);"></i>
+                            <span style="margin-left: var(--spacing-sm);">Expert team with years of experience</span>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-check-circle" style="color: var(--color-gold);"></i>
+                            <span style="margin-left: var(--spacing-sm);">Premium vendor network and exclusive partnerships</span>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0;">
+                            <i class="fas fa-check-circle" style="color: var(--color-gold);"></i>
+                            <span style="margin-left: var(--spacing-sm);">Flawless execution and day-of coordination</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+</style>
+{% endblock %}

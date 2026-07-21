@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ package.name if package else 'Package Not Found' }} - Elegant Events{% endblock %}
+
+{% block description %}{{ package.description|truncate(160) if package else 'Package not found.' }}{% endblock %}
+
+{% block content %}
+
+{% if package %}
+
+<section class="section" id="package-detail">
+    <div class="container">
+        <div class="row align-items-start">
+            <div class="col-lg-6 reveal">
+                <span class="section-subtitle">Package</span>
+                <h1>{{ package.name }}</h1>
+                <div class="section-divider" style="margin-left: 0;"></div>
+                <div class="package-meta" style="display: flex; gap: var(--spacing-lg); flex-wrap: wrap; margin-bottom: var(--spacing-md);">
+                    <span><i class="fas fa-clock" style="color: var(--color-gold);"></i> Duration: {{ package.duration }}</span>
+                    <span><i class="fas fa-tag" style="color: var(--color-gold);"></i> KES {{ package.price }}</span>
+                </div>
+                <p style="font-size: 1.05rem; line-height: 1.8; color: var(--color-text-light);">{{ package.description }}</p>
+
+                {% if package_services %}
+                <div style="margin-top: var(--spacing-lg);">
+                    <h4 style="font-weight: 600;">Services Included</h4>
+                    <ul style="list-style: none; padding: 0; margin-top: var(--spacing-md);">
+                        {% for service in package_services %}
+                        <li style="padding: var(--spacing-sm) 0; border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-check-circle" style="color: var(--color-gold);"></i>
+                            <span style="margin-left: var(--spacing-sm);">{{ service.name }}</span>
+                            <span style="float: right; color: var(--color-text-light); font-size: 0.9rem;">KES {{ service.price }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div style="margin-top: var(--spacing-lg);">
+                    <a href="{{ url_for('plan_event') }}" class="btn btn-gold btn-lg">Book This Package</a>
+                    <a href="{{ url_for('packages') }}" class="btn btn-outline-gold btn-lg">All Packages</a>
+                </div>
+            </div>
+            <div class="col-lg-6 reveal" data-aos-delay="200">
+                {% if package.image %}
+                    <img src="{{ package.image }}" alt="{{ package.name }}" class="img-fluid rounded shadow" loading="lazy">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/placeholder-' + package.slug + '.jpg') }}" alt="{{ package.name }}" class="img-fluid rounded shadow" loading="lazy">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% else %}
+
+<section class="section" style="min-height: 60vh; display: flex; align-items: center;">
+    <div class="container text-center">
+        <h1 style="font-size: 4rem; color: var(--color-gold);">404</h1>
+        <h2>Package Not Found</h2>
+        <p style="color: var(--color-text-light);">The package you're looking for doesn't exist or has been removed.</p>
+        <a href="{{ url_for('packages') }}" class="btn btn-gold mt-3">Browse Packages</a>
+    </div>
+</section>
+
+{% endif %}
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+</style>
+{% endblock %}

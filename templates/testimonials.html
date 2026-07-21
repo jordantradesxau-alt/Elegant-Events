@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Testimonials - Elegant Events{% endblock %}
+
+{% block description %}Read what our clients have to say about their experience with Elegant Events. Real stories from real clients who trusted us with their special moments.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="testimonials-hero">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Client Stories</span>
+            <h1>Testimonials</h1>
+            <div class="section-divider"></div>
+            <p>Read what our clients have to say about their experience with Elegant Events.</p>
+        </div>
+
+        <div class="row g-4">
+            {% if testimonials %}
+                {% for testimonial in testimonials %}
+                <div class="col-md-6 col-lg-4 reveal" data-aos-delay="{{ loop.index0 * 100 }}">
+                    <div class="testimonial-card" style="height: 100%;">
+                        <div class="testimonial-rating">
+                            {% for i in range(testimonial.rating) %}
+                                <i class="fas fa-star"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="testimonial-text" style="font-family: var(--font-accent); font-size: 1.1rem; font-style: italic; color: var(--color-text); margin-bottom: var(--spacing-md);">"{{ testimonial.review }}"</p>
+                        <div class="testimonial-author">
+                            <strong>{{ testimonial.client_name }}</strong>
+                            <span style="color: var(--color-text-light); font-size: 0.9rem;">— Verified Client</span>
+                            {% if testimonial.service_id %}
+                                <span style="color: var(--color-gold); font-size: 0.85rem; margin-top: var(--spacing-xs);">
+                                    <i class="fas fa-tag"></i> {{ testimonial.service_name|default('Service') }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No testimonials yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="section" style="background: var(--color-light-gray);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 reveal">
+                <span class="section-subtitle">Share Your Story</span>
+                <h2>We'd Love to Hear <span style="color: var(--color-gold);">From You</span></h2>
+                <p style="color: var(--color-text-light);">Have you worked with us? We'd love to feature your experience on our website.</p>
+                <a href="{{ url_for('contact') }}" class="btn btn-gold mt-3">Share Your Experience</a>
+            </div>
+            <div class="col-lg-6 reveal" data-aos-delay="200">
+                <div style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); text-align: center;">
+                    <i class="fas fa-star" style="font-size: 3rem; color: var(--color-gold); display: block; margin-bottom: var(--spacing-md);"></i>
+                    <h4 style="font-weight: 600;">Your Feedback Matters</h4>
+                    <p style="color: var(--color-text-light);">Your reviews help us improve and serve you better.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+    .testimonial-card {
+        padding: var(--spacing-lg);
+        background: var(--color-white);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-smooth);
+    }
+    .testimonial-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+    .testimonial-rating {
+        color: var(--color-gold);
+        font-size: 1.2rem;
+        margin-bottom: var(--spacing-sm);
+    }
+</style>
+{% endblock %}

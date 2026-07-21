@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Elegant Events{% endblock %}
+
+{% block description %}Get in touch with Elegant Events. We'd love to hear from you and help plan your dream event. Contact us today for a consultation.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="contact-hero">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Get In Touch</span>
+            <h1>Contact Us</h1>
+            <div class="section-divider"></div>
+            <p>Reach out to us and let's start planning your unforgettable event.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-5 reveal">
+                <div style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); height: 100%;">
+                    <h4 style="font-weight: 600; margin-bottom: var(--spacing-md);">Contact Information</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: var(--spacing-sm) 0; display: flex; align-items: center; gap: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-map-marker-alt" style="color: var(--color-gold); width: 24px;"></i>
+                            <span>Nairobi, Kenya</span>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0; display: flex; align-items: center; gap: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-phone" style="color: var(--color-gold); width: 24px;"></i>
+                            <a href="tel:+254700123456" style="color: var(--color-text);">+254 700 123 456</a>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0; display: flex; align-items: center; gap: var(--spacing-md); border-bottom: 1px solid var(--color-border);">
+                            <i class="fas fa-envelope" style="color: var(--color-gold); width: 24px;"></i>
+                            <a href="mailto:info@elegantevents.com" style="color: var(--color-text);">info@elegantevents.com</a>
+                        </li>
+                        <li style="padding: var(--spacing-sm) 0; display: flex; align-items: center; gap: var(--spacing-md);">
+                            <i class="fas fa-clock" style="color: var(--color-gold); width: 24px;"></i>
+                            <span>Mon-Fri: 9:00 AM - 6:00 PM EAT</span>
+                        </li>
+                    </ul>
+
+                    <div style="margin-top: var(--spacing-lg);">
+                        <h5 style="font-weight: 600;">Follow Us</h5>
+                        <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+                            <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--color-dark); color: var(--color-white); transition: all var(--transition-smooth);">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--color-dark); color: var(--color-white); transition: all var(--transition-smooth);">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--color-dark); color: var(--color-white); transition: all var(--transition-smooth);">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--color-dark); color: var(--color-white); transition: all var(--transition-smooth);">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 reveal" data-aos-delay="200">
+                <div style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h4 style="font-weight: 600; margin-bottom: var(--spacing-md);">Send Us a Message</h4>
+                    <form action="{{ url_for('contact') }}" method="POST" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Full Name <span style="color: red;">*</span></label>
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Your full name" required>
+                                    <div class="invalid-feedback">Please enter your name.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email Address <span style="color: red;">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+                                    <div class="invalid-feedback">Please enter a valid email.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="+254 700 123 456">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="message">Message <span style="color: red;">*</span></label>
+                                    <textarea id="message" name="message" class="form-control" rows="5" placeholder="Tell us about your event..." required></textarea>
+                                    <div class="invalid-feedback">Please enter your message.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-gold btn-lg">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+</style>
+{% endblock %}

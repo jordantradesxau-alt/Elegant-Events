@@ -1,0 +1,58 @@
+{% extends 'admin/base_admin.html' %}
+
+{% block title %}Manage Inquiries{% endblock %}
+{% block page_title %}Inquiries{% endblock %}
+{% block page_subtitle %}Manage customer inquiries{% endblock %}
+
+{% block content %}
+
+<div class="admin-card">
+    <div class="table-responsive">
+        <table class="table table-admin">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Service</th>
+                    <th>Package</th>
+                    <th>Event Date</th>
+                    <th>Guests</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inquiry in inquiries %}
+                <tr>
+                    <td><strong>{{ inquiry.reference }}</strong></td>
+                    <td>{{ inquiry.service_name or '-' }}</td>
+                    <td>{{ inquiry.package_name or '-' }}</td>
+                    <td>{{ inquiry.event_date or '-' }}</td>
+                    <td>{{ inquiry.guest_count or '-' }}</td>
+                    <td>KES {{ inquiry.budget or '-' }}</td>
+                    <td><span class="badge badge-status {{ inquiry.status }}">{{ inquiry.status }}</span></td>
+                    <td>
+                        <form action="{{ url_for('admin_inquiry_status', inquiry_id=inquiry.id) }}" method="POST" class="d-flex gap-1">
+                            <select name="status" class="form-control-admin" style="width:120px;padding:4px 8px;font-size:0.8rem;">
+                                <option value="pending" {% if inquiry.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="contacted" {% if inquiry.status == 'contacted' %}selected{% endif %}>Contacted</option>
+                                <option value="in_progress" {% if inquiry.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="booked" {% if inquiry.status == 'booked' %}selected{% endif %}>Booked</option>
+                                <option value="completed" {% if inquiry.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="cancelled" {% if inquiry.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button type="submit" class="btn btn-gold btn-sm-custom">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No inquiries found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

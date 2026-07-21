@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ============================================================
+    ELEGANT EVENTS - BASE TEMPLATE
+    ============================================================ -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="author" content="Elegant Events">
+    <meta name="robots" content="index, follow">
+
+    <!-- ===== DYNAMIC SEO TAGS ===== -->
+    <title>{% block title %}Elegant Events - Luxury Event Planning & Management{% endblock %}</title>
+    <meta name="description" content="{% block description %}Elegant Events - Create unforgettable moments with our premium event planning, styling, and coordination services. Luxury weddings, corporate events, birthdays, and more.{% endblock %}">
+
+    <!-- ===== CANONICAL URL ===== -->
+    <link rel="canonical" href="{{ url_for(request.endpoint or 'index', **request.view_args or {}, _external=True) }}">
+
+    <!-- ===== OPEN GRAPH TAGS ===== -->
+    <meta property="og:title" content="{% block og_title %}Elegant Events - Luxury Event Planning{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Create unforgettable moments with Elegant Events. Premium event planning, styling, and coordination services.{% endblock %}">
+    <meta property="og:url" content="{{ url_for(request.endpoint or 'index', **request.view_args or {}, _external=True) }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ url_for('static', filename='images/og-image.jpg', _external=True) }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Elegant Events">
+
+    <!-- ===== TWITTER CARD TAGS ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Elegant Events - Luxury Event Planning{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Create unforgettable moments with Elegant Events. Premium event planning, styling, and coordination services.{% endblock %}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/og-image.jpg', _external=True) }}">
+
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <!-- ===== GOOGLE FONTS ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- ===== FONT AWESOME ===== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- ===== STATIC FILES ===== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='files/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='files/css/lightslider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='files/css/style.css') }}">
+
+    <!-- ===== STRUCTURED DATA (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Elegant Events",
+        "url": "{{ url_for('index', _external=True) }}",
+        "logo": "{{ url_for('static', filename='images/favicon.png', _external=True) }}",
+        "description": "Luxury event planning and management services.",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Nairobi",
+            "addressCountry": "Kenya"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+254700123456",
+            "contactType": "sales",
+            "availableLanguage": ["English"]
+        },
+        "sameAs": [
+            "https://facebook.com/elegantevents",
+            "https://instagram.com/elegantevents",
+            "https://twitter.com/elegantevents"
+        ]
+    }
+    </script>
+
+    <!-- ===== ADDITIONAL BLOCK FOR EXTRA HEAD CONTENT ===== -->
+    {% block extra_head %}{% endblock %}
+
+</head>
+<body>
+
+    <!-- ===== PAGE WRAPPER ===== -->
+    <div id="page-wrapper">
+
+        <!-- ===== NAVBAR ===== -->
+        {% include 'navbar.html' %}
+
+        <!-- ===== FLASH MESSAGES ===== -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'danger' %}exclamation-circle{% elif category == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main id="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- ===== FOOTER ===== -->
+        {% include 'footer.html' %}
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="{{ url_for('static', filename='files/js/jquery.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='files/js/lightslider.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='files/js/bootstrap.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='files/js/script.js') }}" defer></script>
+
+    <!-- ===== ADDITIONAL BLOCK FOR EXTRA SCRIPTS ===== -->
+    {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery - Elegant Events{% endblock %}
+
+{% block description %}Browse our portfolio of stunning events including luxury weddings, corporate events, birthday celebrations, and private gatherings.{% endblock %}
+
+{% block content %}
+
+<section class="section" id="gallery-hero">
+    <div class="container">
+        <div class="section-header reveal">
+            <span class="section-subtitle">Our Portfolio</span>
+            <h1>Gallery</h1>
+            <div class="section-divider"></div>
+            <p>Browse through our collection of stunning events we've had the privilege of planning and executing.</p>
+        </div>
+
+        {% if gallery_by_album %}
+            {% for album, images in gallery_by_album.items() %}
+            <div class="mt-5 reveal">
+                <h3 style="font-family: var(--font-heading); font-weight: 600; margin-bottom: var(--spacing-md);">
+                    <i class="fas fa-folder-open" style="color: var(--color-gold);"></i>
+                    {{ album|title }}
+                </h3>
+                <div class="row g-3">
+                    {% for image in images %}
+                    <div class="col-6 col-md-4 col-lg-3 reveal" data-aos-delay="{{ loop.index0 * 50 }}">
+                        <div class="gallery-item" style="position: relative; overflow: hidden; border-radius: var(--radius-sm); cursor: pointer;">
+                            {% if image.image %}
+                                <img src="{{ image.image }}" alt="{{ image.title }}" class="img-fluid" style="width: 100%; height: 220px; object-fit: cover; transition: transform var(--transition-smooth);" loading="lazy">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/placeholder-gallery-' + album + '-1.jpg') }}" alt="{{ image.title }}" class="img-fluid" style="width: 100%; height: 220px; object-fit: cover; transition: transform var(--transition-smooth);" loading="lazy">
+                            {% endif %}
+                            <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; padding: var(--spacing-md); background: linear-gradient(transparent, rgba(0,0,0,0.7)); color: var(--color-white); opacity: 0; transition: opacity var(--transition-smooth);">
+                                <h6 style="margin: 0; font-weight: 600;">{{ image.title }}</h6>
+                                <small style="opacity: 0.8;">{{ image.description|truncate(40) }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">No gallery images available. Check back soon!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section" style="background: var(--color-light-gray);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 reveal">
+                <span class="section-subtitle">Have an Event?</span>
+                <h2>Let Us Capture <span style="color: var(--color-gold);">Your Special Moments</span></h2>
+                <p style="color: var(--color-text-light);">Contact us today to start planning your dream event and have it featured in our gallery.</p>
+                <a href="{{ url_for('plan_event') }}" class="btn btn-gold mt-3">Plan Your Event</a>
+            </div>
+            <div class="col-lg-6 reveal" data-aos-delay="200">
+                <div style="background: var(--color-white); padding: var(--spacing-lg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); text-align: center;">
+                    <i class="fas fa-camera" style="font-size: 3rem; color: var(--color-gold); display: block; margin-bottom: var(--spacing-md);"></i>
+                    <h4 style="font-weight: 600;">Ready to Be Featured?</h4>
+                    <p style="color: var(--color-text-light);">Every event we plan is a masterpiece. Let's create yours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .section-subtitle {
+        font-family: var(--font-accent);
+        font-size: 1.2rem;
+        color: var(--color-gold);
+        font-style: italic;
+        display: block;
+        margin-bottom: var(--spacing-xs);
+    }
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
