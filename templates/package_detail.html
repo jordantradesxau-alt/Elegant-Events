@@ -37,7 +37,7 @@
                 {% endif %}
 
                 <div style="margin-top: var(--spacing-lg);">
-                    <a href="{{ url_for('plan_event') }}" class="btn btn-gold btn-lg">Book This Package</a>
+                    <a href="{{ url_for('plan_event', package_id=package.id) }}" class="btn btn-gold btn-lg">Book This Package</a>
                     <a href="{{ url_for('packages') }}" class="btn btn-outline-gold btn-lg">All Packages</a>
                 </div>
             </div>
