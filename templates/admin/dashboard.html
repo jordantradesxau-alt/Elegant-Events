@@ -76,6 +76,78 @@
     </div>
 </div>
 
+<!-- ===== RECENT SERVICES & PACKAGES ===== -->
+<div class="row g-3 mb-3">
+    <div class="col-md-6">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5><i class="fas fa-concierge-bell" style="color: #d4af37;"></i> Recently Added Services</h5>
+                <a href="{{ url_for('admin_services') }}" class="btn btn-outline-gold btn-sm-custom">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-admin">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_services %}
+                            {% for service in recent_services %}
+                            <tr>
+                                <td>{{ service.name }}</td>
+                                <td><span class="badge badge-status active">{{ service.category }}</span></td>
+                                <td><span class="badge badge-status {{ service.status }}">{{ service.status }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-muted text-center">No services added yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5><i class="fas fa-box" style="color: #d4af37;"></i> Recently Added Packages</h5>
+                <a href="{{ url_for('admin_packages') }}" class="btn btn-outline-gold btn-sm-custom">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-admin">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_packages %}
+                            {% for package in recent_packages %}
+                            <tr>
+                                <td>{{ package.name }}</td>
+                                <td>KES {{ package.price }}</td>
+                                <td><span class="badge badge-status {{ package.status }}">{{ package.status }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-muted text-center">No packages added yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Quick Actions -->
 <div class="admin-card">
     <div class="admin-card-header">
@@ -96,6 +168,12 @@
         </a>
         <a href="{{ url_for('admin_inquiries') }}" class="btn btn-outline-gold btn-sm-custom">
             <i class="fas fa-envelope"></i> View Inquiries
+        </a>
+        <a href="{{ url_for('admin_testimonials') }}" class="btn btn-outline-gold btn-sm-custom">
+            <i class="fas fa-star"></i> Manage Testimonials
+        </a>
+        <a href="{{ url_for('admin_gallery') }}" class="btn btn-outline-gold btn-sm-custom">
+            <i class="fas fa-images"></i> Manage Gallery
         </a>
     </div>
 </div>
