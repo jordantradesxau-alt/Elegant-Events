@@ -15,7 +15,6 @@ from flask import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import psycopg2.extras
-import re
 
 # ============================================================
 # APPLICATION INITIALIZATION
@@ -159,7 +158,7 @@ def services():
     """Services listing page."""
     conn = get_db()
     if not conn:
-        return render_template('services.html', services=[], categories=[])
+        return render_template('services.html', services_by_category={})
     
     try:
         cursor = conn.cursor()
@@ -179,8 +178,8 @@ def services():
         close_db(conn)
         return render_template('services.html', services_by_category={})
 
-@app.route('/service/<slug>')
-def service_detail(slug):
+@app.route('/service/<int:service_id>')
+def service_detail(service_id):
     """Single service page."""
     conn = get_db()
     if not conn:
@@ -188,7 +187,7 @@ def service_detail(slug):
     
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM services WHERE slug = %s AND status = 'active'", (slug,))
+        cursor.execute("SELECT * FROM services WHERE id = %s AND status = 'active'", (service_id,))
         service = cursor.fetchone()
         
         if not service:
@@ -223,8 +222,8 @@ def packages():
         close_db(conn)
         return render_template('packages.html', packages=[])
 
-@app.route('/package/<slug>')
-def package_detail(slug):
+@app.route('/package/<int:package_id>')
+def package_detail(package_id):
     """Single package page."""
     conn = get_db()
     if not conn:
@@ -232,7 +231,7 @@ def package_detail(slug):
     
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM packages WHERE slug = %s AND status = 'active'", (slug,))
+        cursor.execute("SELECT * FROM packages WHERE id = %s AND status = 'active'", (package_id,))
         package = cursor.fetchone()
         
         if not package:
@@ -259,7 +258,7 @@ def gallery():
     """Gallery page."""
     conn = get_db()
     if not conn:
-        return render_template('gallery.html', albums={})
+        return render_template('gallery.html', gallery_by_album={})
     
     try:
         cursor = conn.cursor()
@@ -277,7 +276,7 @@ def gallery():
     except Exception as e:
         print(f"Gallery error: {e}")
         close_db(conn)
-        return render_template('gallery.html', albums={})
+        return render_template('gallery.html', gallery_by_album={})
 
 @app.route('/testimonials')
 def testimonials():
@@ -301,10 +300,6 @@ def testimonials():
 def contact():
     """Contact page."""
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        message = request.form.get('message')
         flash('Thank you for your message. We\'ll get back to you soon.', 'success')
         return redirect('/contact')
     return render_template('contact.html')
@@ -317,19 +312,16 @@ def plan_event():
     
     try:
         cursor = conn.cursor()
-        cursor.execute("SELECT id, name, slug, price FROM services WHERE status = 'active' ORDER BY name")
+        cursor.execute("SELECT id, name, price FROM services WHERE status = 'active' ORDER BY name")
         services = cursor.fetchall()
-        cursor.execute("SELECT id, name, slug, price FROM packages WHERE status = 'active' ORDER BY name")
+        cursor.execute("SELECT id, name, price FROM packages WHERE status = 'active' ORDER BY name")
         packages = cursor.fetchall()
         close_db(conn, cursor)
         
         if request.method == 'POST':
-            # Get contact info
             full_name = request.form.get('full_name', '').strip()
             email = request.form.get('email', '').strip()
             phone = request.form.get('phone', '').strip()
-            
-            # Get event info
             service_id = request.form.get('service_id')
             package_id = request.form.get('package_id')
             event_date = request.form.get('event_date')
@@ -337,12 +329,10 @@ def plan_event():
             budget = request.form.get('budget')
             details = request.form.get('details', '').strip()
             
-            # Validate required fields
             if not full_name or not email or not phone or not event_date or not guest_count or not details:
                 flash('Please fill in all required fields.', 'danger')
                 return render_template('plan_event.html', services=services, packages=packages)
             
-            # Generate reference
             reference = "EE" + datetime.now().strftime("%Y%m%d%H%M%S")
             
             conn2 = get_db()
@@ -462,21 +452,6 @@ def terms():
     """Terms & Conditions page."""
     return render_template('terms.html')
 
-@app.route('/sitemap.xml')
-def sitemap():
-    """Sitemap XML."""
-    return send_from_directory(app.root_path, 'sitemap.xml')
-
-@app.route('/robots.txt')
-def robots():
-    """Robots.txt."""
-    return send_from_directory(app.root_path, 'robots.txt')
-
-@app.route('/manifest.json')
-def manifest():
-    """Manifest.json."""
-    return send_from_directory(app.root_path, 'manifest.json')
-
 # ============================================================
 # ADMIN AUTHENTICATION
 # ============================================================
@@ -594,32 +569,16 @@ def admin_services():
 def admin_service_add():
     if request.method == 'POST':
         name = request.form.get('name')
-        
-        if not name:
-            flash('Name is required.', 'danger')
-            return render_template('admin/service_form.html')
-        
-        # AUTO-GENERATE SLUG
-        slug = name.lower()
-        slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
-        slug = re.sub(r'[^a-z0-9-]', '', slug)
-
-        # Check if slug exists, make it unique if it does
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT slug FROM services WHERE slug = %s", (slug,))
-        existing = cursor.fetchone()
-        close_db(conn, cursor)
-        
-        if existing:
-            slug = f"{slug}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
         description = request.form.get('description')
         price = request.form.get('price')
         duration = request.form.get('duration')
         category = request.form.get('category')
         featured = request.form.get('featured') == 'on'
         status = request.form.get('status', 'active')
+        
+        if not name:
+            flash('Name is required.', 'danger')
+            return render_template('admin/service_form.html')
         
         image_url = None
         if 'image' in request.files:
@@ -638,9 +597,9 @@ def admin_service_add():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO services (name, slug, description, price, duration, category, image, featured, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (name, slug, description, price, duration, category, image_url, featured, status))
+                INSERT INTO services (name, description, price, duration, category, image, featured, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (name, description, price, duration, category, image_url, featured, status))
             conn.commit()
             close_db(conn, cursor)
             flash('Service added successfully!', 'success')
@@ -672,7 +631,6 @@ def admin_service_edit(service_id):
         
         if request.method == 'POST':
             name = request.form.get('name')
-            slug = request.form.get('slug')
             description = request.form.get('description')
             price = request.form.get('price')
             duration = request.form.get('duration')
@@ -692,12 +650,17 @@ def admin_service_edit(service_id):
             
             cursor.execute("""
                 UPDATE services SET
-                    name = %s, slug = %s, description = %s,
-                    price = %s, duration = %s, category = %s,
-                    image = %s, featured = %s, status = %s,
+                    name = %s,
+                    description = %s,
+                    price = %s,
+                    duration = %s,
+                    category = %s,
+                    image = %s,
+                    featured = %s,
+                    status = %s,
                     updated_at = NOW()
                 WHERE id = %s
-            """, (name, slug, description, price, duration, category, image_url, featured, status, service_id))
+            """, (name, description, price, duration, category, image_url, featured, status, service_id))
             conn.commit()
             close_db(conn, cursor)
             flash('Service updated!', 'success')
@@ -759,32 +722,15 @@ def admin_packages():
 def admin_package_add():
     if request.method == 'POST':
         name = request.form.get('name')
-        
-        if not name:
-            flash('Name is required.', 'danger')
-            return render_template('admin/package_form.html')
-        
-        # AUTO-GENERATE SLUG FROM NAME
-        slug = name.lower()
-        slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
-        slug = re.sub(r'[^a-z0-9-]', '', slug)
-
-        # Check if slug exists, make it unique if it does
-        conn = get_db()
-        cursor = conn.cursor()
-        cursor.execute("SELECT slug FROM packages WHERE slug = %s", (slug,))
-        existing = cursor.fetchone()
-        close_db(conn, cursor)
-        
-        if existing:
-            slug = f"{slug}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        
-        # ✅ REMOVED the slug check since we auto-generate it
         description = request.form.get('description')
         price = request.form.get('price')
         duration = request.form.get('duration')
         featured = request.form.get('featured') == 'on'
         status = request.form.get('status', 'active')
+        
+        if not name:
+            flash('Name is required.', 'danger')
+            return render_template('admin/package_form.html')
         
         image_url = None
         if 'image' in request.files:
@@ -803,9 +749,9 @@ def admin_package_add():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO packages (name, slug, description, price, duration, image, featured, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (name, slug, description, price, duration, image_url, featured, status))
+                INSERT INTO packages (name, description, price, duration, image, featured, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (name, description, price, duration, image_url, featured, status))
             conn.commit()
             close_db(conn, cursor)
             flash('Package added!', 'success')
@@ -845,7 +791,6 @@ def admin_package_edit(package_id):
         
         if request.method == 'POST':
             name = request.form.get('name')
-            slug = request.form.get('slug')
             description = request.form.get('description')
             price = request.form.get('price')
             duration = request.form.get('duration')
@@ -864,15 +809,18 @@ def admin_package_edit(package_id):
             
             cursor.execute("""
                 UPDATE packages SET
-                    name = %s, slug = %s, description = %s,
-                    price = %s, duration = %s,
-                    image = %s, featured = %s, status = %s,
+                    name = %s,
+                    description = %s,
+                    price = %s,
+                    duration = %s,
+                    image = %s,
+                    featured = %s,
+                    status = %s,
                     updated_at = NOW()
                 WHERE id = %s
-            """, (name, slug, description, price, duration, image_url, featured, status, package_id))
+            """, (name, description, price, duration, image_url, featured, status, package_id))
             conn.commit()
             
-            # Update package_services
             if 'services' in request.form:
                 cursor.execute("DELETE FROM package_services WHERE package_id = %s", (package_id,))
                 services = request.form.getlist('services')
