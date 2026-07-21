@@ -15,6 +15,7 @@ from flask import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import psycopg2.extras
+import re
 
 # ============================================================
 # APPLICATION INITIALIZATION
@@ -593,7 +594,12 @@ def admin_services():
 def admin_service_add():
     if request.method == 'POST':
         name = request.form.get('name')
-        slug = request.form.get('slug')
+        
+        # AUTO-GENERATE SLUG FROM NAME
+        slug = name.lower()
+        slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
+        slug = re.sub(r'[^a-z0-9-]', '', slug)  # Remove any other special chars
+        
         description = request.form.get('description')
         price = request.form.get('price')
         duration = request.form.get('duration')
@@ -743,12 +749,11 @@ def admin_packages():
 def admin_package_add():
     if request.method == 'POST':
         name = request.form.get('name')
-        slug = request.form.get('slug')
-        description = request.form.get('description')
-        price = request.form.get('price')
-        duration = request.form.get('duration')
-        featured = request.form.get('featured') == 'on'
-        status = request.form.get('status', 'active')
+        
+        # AUTO-GENERATE SLUG FROM NAME
+        slug = name.lower()
+        slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
+        slug = re.sub(r'[^a-z0-9-]', '', slug)
         
         if not name or not slug:
             flash('Name and slug are required.', 'danger')
