@@ -24,7 +24,7 @@
                             {% if package.image %}
                                 <img src="{{ package.image }}" alt="{{ package.name }}" loading="lazy">
                             {% else %}
-                                <img src="{{ url_for('static', filename='images/placeholder-' + package.slug + '.jpg') }}" alt="{{ package.name }}" loading="lazy">
+                                <img src="{{ url_for('static', filename='images/placeholder-' + package.name|lower|replace(' ', '-') + '.jpg') }}" alt="{{ package.name }}" loading="lazy">
                             {% endif %}
                             {% if package.featured %}
                                 <span class="card-badge">Featured</span>
@@ -38,7 +38,7 @@
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <span class="card-price">KES {{ package.price }}</span>
-                                <a href="{{ url_for('package_detail', slug=package.slug) }}" class="btn btn-gold btn-sm">View Package</a>
+                                <a href="{{ url_for('package_detail', package_id=package.id) }}" class="btn btn-gold btn-sm">View Package</a>
                             </div>
                         </div>
                     </div>
