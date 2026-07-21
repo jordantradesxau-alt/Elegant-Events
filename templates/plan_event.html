@@ -58,7 +58,9 @@
                                     <select id="service_id" name="service_id" class="form-control">
                                         <option value="">Choose a service...</option>
                                         {% for service in services %}
-                                        <option value="{{ service.id }}">{{ service.name }}</option>
+                                        <option value="{{ service.id }}" {% if service.id == selected_service %}selected{% endif %}>
+                                            {{ service.name }}
+                                        </option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -69,7 +71,9 @@
                                     <select id="package_id" name="package_id" class="form-control">
                                         <option value="">Choose a package...</option>
                                         {% for package in packages %}
-                                        <option value="{{ package.id }}">{{ package.name }}</option>
+                                        <option value="{{ package.id }}" {% if package.id == selected_package %}selected{% endif %}>
+                                            {{ package.name }}
+                                        </option>
                                         {% endfor %}
                                     </select>
                                 </div>
