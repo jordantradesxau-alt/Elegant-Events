@@ -6,6 +6,13 @@
 
 {% block content %}
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">Total: {{ testimonials|length }} testimonials</span>
+    <a href="{{ url_for('admin_testimonial_add') }}" class="btn btn-gold btn-sm-custom">
+        <i class="fas fa-plus"></i> Add Testimonial
+    </a>
+</div>
+
 <div class="admin-card">
     <div class="table-responsive">
         <table class="table table-admin">
@@ -14,6 +21,7 @@
                     <th>Client</th>
                     <th>Review</th>
                     <th>Rating</th>
+                    <th>Service</th>
                     <th>Status</th>
                     <th>Featured</th>
                     <th>Actions</th>
@@ -27,6 +35,13 @@
                     <td>
                         {% for i in range(testimonial.rating) %}⭐{% endfor %}
                     </td>
+                    <td>
+                        {% if testimonial.service_id %}
+                            <span class="badge badge-status active">Linked</span>
+                        {% else %}
+                            <span class="badge badge-status inactive">General</span>
+                        {% endif %}
+                    </td>
                     <td><span class="badge badge-status {{ testimonial.status }}">{{ testimonial.status }}</span></td>
                     <td>
                         {% if testimonial.is_featured %}
@@ -37,6 +52,9 @@
                     </td>
                     <td>
                         <div class="d-flex gap-1">
+                            <a href="{{ url_for('admin_testimonial_edit', testimonial_id=testimonial.id) }}" class="btn btn-outline-gold btn-sm-custom">
+                                <i class="fas fa-edit"></i>
+                            </a>
                             {% if testimonial.status == 'pending' %}
                             <a href="{{ url_for('admin_testimonial_approve', testimonial_id=testimonial.id) }}" class="btn btn-gold btn-sm-custom">
                                 <i class="fas fa-check"></i>
@@ -50,7 +68,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="6" class="text-center text-muted">No testimonials found.</td>
+                    <td colspan="7" class="text-center text-muted">No testimonials found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
