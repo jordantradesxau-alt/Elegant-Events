@@ -45,7 +45,7 @@
                 {% if package.image %}
                     <img src="{{ package.image }}" alt="{{ package.name }}" class="img-fluid rounded shadow" loading="lazy">
                 {% else %}
-                    <img src="{{ url_for('static', filename='images/placeholder-' + package.slug + '.jpg') }}" alt="{{ package.name }}" class="img-fluid rounded shadow" loading="lazy">
+                    <img src="{{ url_for('static', filename='images/placeholder-' + package.name|lower|replace(' ', '-') + '.jpg') }}" alt="{{ package.name }}" class="img-fluid rounded shadow" loading="lazy">
                 {% endif %}
             </div>
         </div>
