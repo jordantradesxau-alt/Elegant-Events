@@ -750,9 +750,9 @@ def admin_package_add():
         try:
             cursor = conn.cursor()
             cursor.execute("""
-                INSERT INTO packages (name, description, price, duration, image, featured, status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (name, description, price, duration, image_url, featured, status))
+            INSERT INTO packages (name, description, price, duration, image, featured, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, (name, description, price, duration, image_url, featured, status))
             conn.commit()
             close_db(conn, cursor)
             flash('Package added!', 'success')
