@@ -20,6 +20,38 @@
                 <div style="background: var(--color-white); padding: var(--spacing-xl); border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
                     <form action="{{ url_for('plan_event') }}" method="POST" class="needs-validation" novalidate>
                         <div class="row g-3">
+                            <!-- CONTACT INFO -->
+                            <div class="col-md-12">
+                                <h5 style="font-weight: 600; color: var(--color-gold);">Contact Information</h5>
+                                <hr style="border-color: var(--color-border);">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="full_name">Full Name <span style="color: red;">*</span></label>
+                                    <input type="text" id="full_name" name="full_name" class="form-control" placeholder="Your full name" required>
+                                    <div class="invalid-feedback">Please enter your name.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email Address <span style="color: red;">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+                                    <div class="invalid-feedback">Please enter a valid email.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number <span style="color: red;">*</span></label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="+254 700 123 456" required>
+                                    <div class="invalid-feedback">Please enter a valid phone number.</div>
+                                </div>
+                            </div>
+
+                            <!-- EVENT INFO -->
+                            <div class="col-md-12">
+                                <h5 style="font-weight: 600; color: var(--color-gold); margin-top: var(--spacing-md);">Event Information</h5>
+                                <hr style="border-color: var(--color-border);">
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="service_id">Select a Service</label>
@@ -69,7 +101,15 @@
                                     <div class="invalid-feedback">Please provide event details.</div>
                                 </div>
                             </div>
+
+                            <!-- SUBMIT -->
                             <div class="col-md-12">
+                                <div style="background: var(--color-light-gray); padding: var(--spacing-md); border-radius: var(--radius-sm); margin-bottom: var(--spacing-md);">
+                                    <p style="color: var(--color-text-light); margin: 0; font-size: 0.9rem;">
+                                        <i class="fas fa-info-circle" style="color: var(--color-gold);"></i>
+                                        Your inquiry will be reviewed by our team. You'll receive a response within 24-48 hours.
+                                    </p>
+                                </div>
                                 <button type="submit" class="btn btn-gold btn-lg w-100">Submit Inquiry</button>
                             </div>
                         </div>
