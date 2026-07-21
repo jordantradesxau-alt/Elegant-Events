@@ -15,6 +15,7 @@ from flask import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 import psycopg2.extras
+from flask import send_from_directory
 
 # ============================================================
 # APPLICATION INITIALIZATION
@@ -1086,6 +1087,22 @@ def admin_gallery_delete(gallery_id):
         flash('Error deleting gallery image.', 'danger')
     
     return redirect('/admin/gallery')
+
+# ============================================================
+# STATIC FILES ROUTES
+# ============================================================
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(app.root_path, 'sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(app.root_path, 'robots.txt')
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory(app.root_path, 'manifest.json')
 
 # ============================================================
 # ERROR HANDLERS
