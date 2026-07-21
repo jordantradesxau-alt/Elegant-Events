@@ -603,6 +603,16 @@ def admin_service_add():
         slug = name.lower()
         slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
         slug = re.sub(r'[^a-z0-9-]', '', slug)
+
+        # Check if slug exists, make it unique if it does
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT slug FROM services WHERE slug = %s", (slug,))
+        existing = cursor.fetchone()
+        close_db(conn, cursor)
+        
+        if existing:
+            slug = f"{slug}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
         description = request.form.get('description')
         price = request.form.get('price')
@@ -758,6 +768,16 @@ def admin_package_add():
         slug = name.lower()
         slug = slug.replace(' ', '-').replace('/', '-').replace('&', 'and')
         slug = re.sub(r'[^a-z0-9-]', '', slug)
+
+        # Check if slug exists, make it unique if it does
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT slug FROM packages WHERE slug = %s", (slug,))
+        existing = cursor.fetchone()
+        close_db(conn, cursor)
+        
+        if existing:
+            slug = f"{slug}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
         
         # ✅ REMOVED the slug check since we auto-generate it
         description = request.form.get('description')
