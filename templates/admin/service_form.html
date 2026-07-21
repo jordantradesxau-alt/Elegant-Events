@@ -16,12 +16,6 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="fw-bold">Slug <span class="text-danger">*</span></label>
-                    <input type="text" name="slug" class="form-control-admin" value="{{ service.slug if service else '' }}" placeholder="e.g., luxury-wedding-planning" required>
-                    <small class="text-muted">URL-friendly version of the name (lowercase, hyphens instead of spaces)</small>
-                </div>
-
-                <div class="form-group mb-3">
                     <label class="fw-bold">Description</label>
                     <textarea name="description" class="form-control-admin" rows="4" placeholder="Full service description...">{{ service.description if service else '' }}</textarea>
                 </div>
